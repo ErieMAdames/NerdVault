@@ -34,13 +34,62 @@ The project is broken into **6 phases**. Each phase builds on the last, and ever
 
 ---
 
+### Step 1.1: Run the Bootstrap Script
+
+First things first — let's get your machine set up. The bootstrap script installs everything you need. You don't need to understand what all of it does yet; the mini-lessons below will explain each piece after you're up and running.
+
+Open PowerShell **as Administrator** and run:
+
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force
+.\bootstrap.ps1
+```
+
+This installs WSL2 + Ubuntu, Docker Desktop, and dev tools. Follow the prompts. If it asks you to reboot, do so, then run the script again — it will pick up where it left off.
+
+After the script finishes, verify everything inside a WSL terminal (open Ubuntu from the Start menu):
+
+```bash
+python3.12 --version    # should print Python 3.12.x
+node --version           # should print v20.x.x
+git --version            # should print git version 2.x.x
+docker --version         # should print Docker version 2x.x.x (requires Docker Desktop running)
+```
+
+If any of those fail, re-read the bootstrap output — it tells you what succeeded, what failed, and what to do manually.
+
+---
+
+### Step 1.2: Set Up Your Project Directory
+
+Inside WSL, create your project:
+
+```bash
+mkdir -p ~/nerdvault
+cd ~/nerdvault
+```
+
+Open it in VS Code (make sure you have the WSL extension installed):
+
+```bash
+code .
+```
+
+VS Code will open connected to your WSL filesystem. The terminal inside VS Code is now a Linux terminal.
+
+---
+
+Now that your environment is working, let's understand what was just installed and why. Read through the mini-lessons below before moving on to the Docker steps.
+
+---
+
 ### Mini-Lesson: What is WSL?
 
 WSL stands for **Windows Subsystem for Linux**. It lets you run a full Linux operating system (Ubuntu) right inside Windows — no dual-boot, no virtual machine UI, just a real Linux terminal.
 
 Why does this matter? Almost all web servers run Linux. Tutorials, Stack Overflow answers, and deployment guides assume Linux commands. By developing inside WSL, everything you learn transfers directly to the real world.
 
-WSL2 (the version you're using) runs an actual Linux kernel, not an emulation layer. It's fast, and Docker integrates with it natively.
+WSL2 (the version you're using) runs an actual Linux kernel, not an emulation layer. It's fast, and Docker integrates with it natively. When you opened that Ubuntu terminal and ran `python3.12 --version` a moment ago, you were running a real Linux command on a real Linux kernel — inside Windows.
 
 **Resources**:
 - [Microsoft: What is WSL?](https://learn.microsoft.com/en-us/windows/wsl/about)
@@ -116,47 +165,6 @@ The `.env` file is listed in `.gitignore` so it never gets committed. You provid
 **Resources**:
 - [The Twelve-Factor App: Config](https://12factor.net/config)
 - [Docker Compose: Environment Variables](https://docs.docker.com/compose/environment-variables/)
-
----
-
-### Step 1.1: Run the Bootstrap Script
-
-Open PowerShell **as Administrator** and run:
-
-```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force
-.\bootstrap.ps1
-```
-
-This installs WSL2 + Ubuntu, Docker Desktop, and dev tools. Follow the prompts. If it asks you to reboot, do so, then run the script again — it will pick up where it left off.
-
-After the script finishes, verify everything inside a WSL terminal:
-
-```bash
-python3.12 --version    # should print Python 3.12.x
-node --version           # should print v20.x.x
-git --version            # should print git version 2.x.x
-docker --version         # should print Docker version 2x.x.x (requires Docker Desktop running)
-```
-
----
-
-### Step 1.2: Set Up Your Project Directory
-
-Inside WSL, create your project:
-
-```bash
-mkdir -p ~/nerdvault
-cd ~/nerdvault
-```
-
-Open it in VS Code (make sure you have the WSL extension installed):
-
-```bash
-code .
-```
-
-VS Code will open connected to your WSL filesystem. The terminal inside VS Code is now a Linux terminal.
 
 ---
 
