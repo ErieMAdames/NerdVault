@@ -1166,6 +1166,42 @@ This means bad code can't get into your repo. It's like a bouncer for your codeb
 
 ---
 
+### Mini-Lesson: Branches and Pull Requests
+
+In professional development, you **never commit directly to `main`**. Instead, you:
+
+1. **Create a branch** — a parallel copy of the code where you work on one feature or fix
+2. **Make your changes** on that branch, committing as you go
+3. **Push the branch** to GitHub
+4. **Open a Pull Request (PR)** — a request to merge your branch into `main`
+5. **Review and merge** — teammates review your code, suggest changes, and approve it
+
+This workflow exists because `main` is the "source of truth" — it should always work. Branches let you experiment without breaking things for everyone else.
+
+**Branch naming conventions**:
+- `feature/add-item-search` — new functionality
+- `fix/broken-category-filter` — bug fix
+- `refactor/orm-migration` — restructuring without behavior change
+- `docs/update-readme` — documentation
+
+**The lifecycle of a PR**:
+
+```
+main:     A --- B --- C ----------- G (merge commit)
+                 \                 /
+branch:           D --- E --- F --
+                  (your work)
+```
+
+You branch off from `main`, make commits D, E, F, then open a PR. After review, it gets merged back into `main` as commit G.
+
+**Resources**:
+- [GitHub: About Pull Requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests)
+- [GitHub Flow](https://docs.github.com/en/get-started/using-github/github-flow)
+- [Atlassian: Git Feature Branch Workflow](https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow)
+
+---
+
 ### Task 4.1: Initialize Git
 
 ```bash
@@ -1384,6 +1420,102 @@ The pre-commit hooks will run automatically. If they fail, fix the issues and tr
 
 ---
 
+### Task 4.5: Practice the Pull Request Workflow
+
+From now on, **every new feature or change should go through a PR**. Here's the workflow you'll follow for the rest of this project (and in your career):
+
+**Step 1: Create a branch**
+
+```bash
+# Make sure you're on main and it's up to date
+git checkout main
+git pull origin main
+
+# Create and switch to a new branch
+git checkout -b feature/your-feature-name
+```
+
+Name branches descriptively: `feature/add-item-search`, `fix/category-filter-bug`, `refactor/sqlalchemy-migration`, `docs/update-readme`.
+
+**Step 2: Do your work and commit**
+
+Make your changes, then commit with clear messages:
+
+```bash
+git add .
+git commit -m "Add search endpoint for items by title"
+```
+
+Good commit messages:
+- Start with a verb: "Add", "Fix", "Update", "Remove", "Refactor"
+- Explain what changed and why, not how
+- Keep the first line under 72 characters
+
+Bad: `"fixed stuff"`, `"wip"`, `"asdfg"`, `"changes"`
+Good: `"Fix category filter returning empty results for slugs with hyphens"`
+
+**Step 3: Push and create the PR**
+
+```bash
+# Push your branch to GitHub
+git push -u origin feature/your-feature-name
+```
+
+Then open the PR on GitHub. You can do this from the command line:
+
+```bash
+gh pr create --title "Add item search by title" --body "## Summary
+- Added GET /api/items?search=pikachu endpoint
+- Uses MariaDB LIKE query on title and description
+- Added search bar component to the frontend
+
+## How to Test
+1. Run docker compose up --build
+2. Seed some data with python seed.py
+3. Try searching for 'pikachu' in the UI
+
+## Checklist
+- [ ] API endpoint works (tested with curl)
+- [ ] Frontend search bar triggers the endpoint
+- [ ] No lint errors (pre-commit passes)
+"
+```
+
+Or go to `https://github.com/YOUR_USERNAME/nerdvault` in your browser — GitHub will show a banner to create a PR from your recently pushed branch.
+
+**Step 4: Fill out the PR description**
+
+Every PR should have:
+
+1. **Summary** — what you changed and why (2-3 bullet points)
+2. **How to Test** — exact steps someone can follow to verify your changes work
+3. **Checklist** — checkboxes for things you verified before submitting
+
+This isn't busywork — when you're working on a team, reviewers need to understand what your code does without reading every line. A good PR description saves everyone time.
+
+**Step 5: Review, fix, merge**
+
+In a team, someone reviews your PR and may request changes. You make the fixes on the same branch, commit, and push — the PR updates automatically.
+
+Once approved, merge the PR on GitHub (click "Merge pull request"), then clean up locally:
+
+```bash
+git checkout main
+git pull origin main
+git branch -d feature/your-feature-name
+```
+
+**Your first PR**: To practice this workflow right now, pick any small improvement — fix a typo, add a comment, improve an error message — and submit it as a PR. It doesn't matter how small; the point is to practice the process.
+
+> **Real example**: See [PR #1: Add pull request workflow guide to Phase 4](https://github.com/ErieMAdames/NerdVault/pull/1) — it's the one that added the very section you're reading now. Look at how the branch is named, how the description is structured, and what the diff looks like.
+
+**Resources**:
+- [GitHub: Creating a Pull Request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request)
+- [How to Write a Good PR Description](https://github.blog/developer-skills/github/how-to-write-the-perfect-pull-request/)
+- [Conventional Commits](https://www.conventionalcommits.org/) — a structured commit message format used by many teams
+
+---
+
 ### Phase 4 Checkpoint
 
 Before moving on, verify:
@@ -1395,6 +1527,7 @@ Before moving on, verify:
 - [ ] `npx stylelint "src/**/*.css"` in `frontend/` reports no errors
 - [ ] `pre-commit run --all-files` passes
 - [ ] Your repo is on GitHub with at least 2 commits
+- [ ] You have created and merged at least one PR using the branch workflow
 
 ---
 
